@@ -5,10 +5,10 @@
 // Configuration
 const appConfig = {
   business: {
-    name: "Acme Micro Shop",
-    email: "hello@acmemicro.example",
-    phone: "+1 (555) 010-0100",
-    address: "123 Sample Street, Townsville",
+    name: "Mauiz Cafe",
+    email: "hello@mauizcafe.example",
+    phone: "+1 (555) 010-CAFE",
+    address: "12 Brew Street, Bean City",
   },
   currency: {
     code: "USD",
@@ -20,17 +20,21 @@ const appConfig = {
   },
 };
 
-// Seed catalog (edit freely to match your products)
+// Seed catalog: cafe menu with optional images (sourced URLs or local assets)
 const catalog = [
-  { id: "bowl-chicken", name: "Chicken Bowl", price: 6.99, category: "Bowls" },
-  { id: "bowl-beef", name: "Beef Bowl", price: 7.99, category: "Bowls" },
-  { id: "bowl-veggie", name: "Veggie Bowl", price: 5.99, category: "Bowls" },
-  { id: "addon-egg", name: "Extra Egg", price: 0.99, category: "Add-ons" },
-  { id: "addon-cheese", name: "Cheese", price: 0.79, category: "Add-ons" },
-  { id: "addon-sauce", name: "Spicy Sauce", price: 0.49, category: "Add-ons" },
-  { id: "drink-cola", name: "Cola", price: 1.49, category: "Drinks" },
-  { id: "drink-icedtea", name: "Iced Tea", price: 1.69, category: "Drinks" },
-  { id: "drink-water", name: "Bottled Water", price: 0.99, category: "Drinks" },
+  { id: "coffee-espresso", name: "Espresso", price: 2.5, category: "Coffee", image: "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?w=800&q=60" },
+  { id: "coffee-americano", name: "Americano", price: 3.0, category: "Coffee", image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=800&q=60" },
+  { id: "coffee-latte", name: "Caffe Latte", price: 3.75, category: "Coffee", image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=800&q=60" },
+  { id: "coffee-cappuccino", name: "Cappuccino", price: 3.75, category: "Coffee", image: "https://images.unsplash.com/photo-1510972527921-ce03766a1cf1?w=800&q=60" },
+  { id: "coffee-mocha", name: "Mocha", price: 4.0, category: "Coffee", image: "https://images.unsplash.com/photo-1498804103079-a6351b050096?w=800&q=60" },
+
+  { id: "noncoffee-chocolate", name: "Hot Chocolate", price: 3.25, category: "Non-Coffee", image: "https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?w=800&q=60" },
+  { id: "noncoffee-matcha", name: "Matcha Latte", price: 4.0, category: "Non-Coffee", image: "https://images.unsplash.com/photo-1515824955341-513a8d249d6a?w=800&q=60" },
+  { id: "noncoffee-icedtea", name: "Iced Tea", price: 2.5, category: "Non-Coffee", image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=800&q=60" },
+
+  { id: "pastry-croissant", name: "Butter Croissant", price: 2.75, category: "Pastries", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=60" },
+  { id: "pastry-muffin", name: "Blueberry Muffin", price: 2.25, category: "Pastries", image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476d?w=800&q=60" },
+  { id: "pastry-cookie", name: "Chocolate Chip Cookie", price: 1.75, category: "Pastries", image: "https://images.unsplash.com/photo-1606813907291-76b599ecb39e?w=800&q=60" },
 ];
 
 // State
@@ -85,7 +89,7 @@ const businessNameEl = document.getElementById("businessName");
 const businessFooterNameEl = document.getElementById("businessFooterName");
 const businessFooterContactEl = document.getElementById("businessFooterContact");
 
-const categorySelect = document.getElementById("categorySelect");
+const categoryTabs = document.getElementById("categoryTabs");
 const productsGrid = document.getElementById("productsGrid");
 
 const cartItemsList = document.getElementById("cartItems");
@@ -123,9 +127,25 @@ function initializeApp() {
 
 function populateCategories() {
   const uniqueCategories = Array.from(new Set(catalog.map(p => p.category)));
-  const options = ["All", ...uniqueCategories];
-  categorySelect.innerHTML = options.map(cat => `<option value="${cat}">${cat}</option>`).join("");
-  categorySelect.value = state.selectedCategory;
+  const tabs = ["All", ...uniqueCategories];
+  categoryTabs.innerHTML = tabs.map(cat => `<button type="button" class="tab" data-cat="${cat}">${cat}</button>`).join("");
+  setActiveTab();
+  // Wire up
+  categoryTabs.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.selectedCategory = btn.getAttribute("data-cat");
+      setActiveTab();
+      renderProducts();
+    });
+  });
+}
+
+function setActiveTab() {
+  categoryTabs.querySelectorAll(".tab").forEach(btn => {
+    const cat = btn.getAttribute("data-cat");
+    if (cat === state.selectedCategory) btn.classList.add("active");
+    else btn.classList.remove("active");
+  });
 }
 
 function renderProducts() {
@@ -156,8 +176,10 @@ function renderProducts() {
 
 function renderProductCard(product) {
   const price = formatMoney(product.price);
+  const imgStyle = product.image ? ` style="background-image:url('${product.image}')"` : "";
   return `
     <div class="product-card">
+      <div class="thumb"${imgStyle}></div>
       <div>
         <h4>${product.name}</h4>
         <div class="product-price">${price}</div>
@@ -234,10 +256,6 @@ function renderCart() {
 }
 
 function attachEventListeners() {
-  categorySelect.addEventListener("change", () => {
-    state.selectedCategory = categorySelect.value;
-    renderProducts();
-  });
 
   clearCartBtn.addEventListener("click", () => {
     state.cartProductIdToQuantity.clear();

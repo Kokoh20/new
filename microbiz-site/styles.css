@@ -1,12 +1,12 @@
 :root {
-  --bg: #0b0f14;
-  --panel: #121821;
-  --card: #0f131a;
-  --border: #1f2a38;
-  --muted: #8aa0b5;
-  --text: #e8eef5;
-  --brand: #5b9bff;
-  --accent: #6cf1c4;
+  --bg: #100d0a;
+  --panel: #1a1511;
+  --card: #17120e;
+  --border: #2a221c;
+  --muted: #b8a8a0;
+  --text: #f3ebe7;
+  --brand: #c08457; /* cappuccino */
+  --accent: #f2d0a4; /* latte foam */
   --danger: #ff7a7a;
 }
 
@@ -115,7 +115,7 @@ select, input[type="text"], input[type="email"], input[type="tel"], input[type="
   border-radius: 10px;
   cursor: pointer;
 }
-.btn.primary { background: linear-gradient(180deg, var(--brand), #3b7ae6); border-color: transparent; color: white; }
+.btn.primary { background: linear-gradient(180deg, var(--brand), #9a6a45); border-color: transparent; color: white; }
 .btn.secondary { background: var(--card); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -165,5 +165,29 @@ legend { padding: 0 6px; color: var(--muted); }
   body { background: white; color: #111; }
   .app-header, .app-footer, .invoice-actions, .step:not(.active) { display: none !important; }
   .invoice { box-shadow: none; border: none; }
+}
+
+/* Category tabs */
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.tab {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+}
+.tab.active { background: var(--brand); color: #fff; border-color: transparent; }
+
+/* Product images */
+.product-card .thumb {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #00000022;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background-size: cover;
+  background-position: center;
 }
 

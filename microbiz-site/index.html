@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MicroBiz Shop</title>
+    <title>Mauiz Cafe · Order</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,10 +13,10 @@
     <header class="app-header">
       <div class="container header-inner">
         <div class="brand">
-          <div class="brand-logo">🧾</div>
+          <div class="brand-logo">☕️</div>
           <div class="brand-text">
-            <div class="brand-name" id="businessName">Acme Micro Shop</div>
-            <div class="brand-tagline">Fast, simple checkout</div>
+            <div class="brand-name" id="businessName">Mauiz Cafe</div>
+            <div class="brand-tagline">Coffee & Comfort</div>
           </div>
         </div>
       </div>
@@ -26,11 +26,8 @@
       <!-- Step 1: Product Selection -->
       <section id="step-products" class="step active">
         <div class="section-header">
-          <h2>Products</h2>
-          <div class="filters">
-            <label for="categorySelect">Category</label>
-            <select id="categorySelect"></select>
-          </div>
+          <h2>Menu</h2>
+          <div id="categoryTabs" class="tabs" aria-label="Categories"></div>
         </div>
 
         <div class="layout">
@@ -124,7 +121,7 @@
     <footer class="app-footer">
       <div class="container">
         <small>
-          <span id="businessFooterName">Acme Micro Shop</span> · <span id="businessFooterContact">hello@acmemicro.example</span>
+          <span id="businessFooterName">Mauiz Cafe</span> · <span id="businessFooterContact">hello@mauizcafe.example</span>
         </small>
       </div>
     </footer>
