@@ -3,7 +3,7 @@
 // Simple micro-business storefront: product selection -> payment -> invoice
 
 // Configuration
-const appConfig = {
+let appConfig = {
   business: {
     name: "Mauiz Cafe",
     email: "hello@mauizcafe.example",
@@ -21,7 +21,7 @@ const appConfig = {
 };
 
 // Seed catalog: cafe menu with optional images (sourced URLs or local assets)
-const catalog = [
+let catalog = [
   { id: "coffee-espresso", name: "Espresso", price: 2.5, category: "Coffee", image: "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?w=800&q=60" },
   { id: "coffee-americano", name: "Americano", price: 3.0, category: "Coffee", image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=800&q=60" },
   { id: "coffee-latte", name: "Caffe Latte", price: 3.75, category: "Coffee", image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=800&q=60" },
@@ -111,9 +111,10 @@ const printInvoiceBtn = document.getElementById("printInvoiceBtn");
 const newOrderBtn = document.getElementById("newOrderBtn");
 
 // Init
-initializeApp();
+initializeApp().catch(console.error);
 
-function initializeApp() {
+async function initializeApp() {
+  await hydrateFromApi();
   // Set business identity
   businessNameEl.textContent = appConfig.business.name;
   businessFooterNameEl.textContent = appConfig.business.name;
@@ -123,6 +124,19 @@ function initializeApp() {
   renderProducts();
   renderCart();
   attachEventListeners();
+}
+
+async function hydrateFromApi() {
+  try {
+    const [cfgRes, catRes] = await Promise.all([
+      fetch(`/api/config`).then(r => r.ok ? r.json() : Promise.reject()),
+      fetch(`/api/catalog`).then(r => r.ok ? r.json() : Promise.reject()),
+    ]);
+    if (cfgRes) appConfig = cfgRes;
+    if (catRes && Array.isArray(catRes.catalog)) catalog = catRes.catalog;
+  } catch {
+    // Fallback to embedded config/catalog
+  }
 }
 
 function populateCategories() {
@@ -289,11 +303,20 @@ function attachEventListeners() {
     syncConfirmEnabled();
   });
 
-  paymentForm.addEventListener("submit", (event) => {
+  paymentForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!canConfirm()) return;
-    generateInvoice();
-    goToStep("invoice");
+    try {
+      const order = await submitOrderToApi();
+      state.lastOrder = order || null;
+      generateInvoice(order || undefined);
+      goToStep("invoice");
+    } catch (e) {
+      // If API fails, still generate a local invoice
+      state.lastOrder = null;
+      generateInvoice();
+      goToStep("invoice");
+    }
   });
 
   printInvoiceBtn.addEventListener("click", () => window.print());
@@ -419,15 +442,17 @@ function syncConfirmEnabled() {
   confirmPaymentBtn.disabled = !canConfirm();
 }
 
-function generateInvoice() {
+function generateInvoice(orderFromServer) {
   const items = getCartItems();
-  const { subtotal, tax, total } = calculateTotals();
-  const invoiceId = `INV-${Date.now().toString().slice(-6)}`;
-  const createdAt = new Date();
+  const localTotals = calculateTotals();
+  const { subtotal, tax, total } = orderFromServer?.totals || localTotals;
+  const invoiceId = orderFromServer?.invoiceId || `INV-${Date.now().toString().slice(-6)}`;
+  const createdAt = orderFromServer ? new Date(orderFromServer.createdAt) : new Date();
 
   const paymentSummary = buildPaymentSummary();
 
-  const rowsHtml = items.map(item => `
+  const rowsSource = orderFromServer?.itemsDetailed?.length ? orderFromServer.itemsDetailed.map(d => ({ product: { name: d.name, price: d.price }, quantity: d.quantity, lineTotal: d.lineTotal })) : items;
+  const rowsHtml = rowsSource.map(item => `
     <tr>
       <td>${item.product.name}</td>
       <td>${item.quantity}</td>
@@ -513,5 +538,25 @@ function buildPaymentSummary() {
     return `${provider}${ref}`;
   }
   return "";
+}
+
+async function submitOrderToApi() {
+  const items = [];
+  for (const [productId, quantity] of state.cartProductIdToQuantity.entries()) {
+    items.push({ productId, quantity });
+  }
+  const payload = {
+    items,
+    customer: state.customer,
+    paymentMethod: state.paymentMethod,
+    paymentDetails: state.paymentDetails,
+  };
+  const res = await fetch('/api/orders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error('Order submission failed');
+  return res.json();
 }
 

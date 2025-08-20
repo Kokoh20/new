@@ -2,16 +2,17 @@
 
 Simple, no-backend storefront for a micro-sized business: select products, choose payment method, and generate a printable invoice.
 
-## Run
+## Run (with backend)
 
-- Open `index.html` in any modern browser, or serve the folder:
+Start the Node server (serves the site and APIs):
 
 ```bash
-cd /workspace/microbiz-site
-python3 -m http.server 5173
+cd /workspace/microbiz-server
+npm install
+npm start
 ```
 
-Then visit `http://localhost:5173`.
+Open `http://localhost:8080`.
 
 ## Customize
 
@@ -27,6 +28,6 @@ Then visit `http://localhost:5173`.
 
 ## Notes
 
-- This is a static site; no payment is processed. Use it for in-person or manual orders.
-- All calculations are done client-side. For compliance needs, integrate a backend.
+- No real payment processing; the backend records orders to `microbiz-server/data/orders.json`.
+- Totals are verified on the server using current catalog and tax.
 
