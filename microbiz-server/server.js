@@ -112,7 +112,7 @@ app.get('/api/orders/:id', (req, res) => {
 
 app.post('/api/orders', (req, res) => {
   try {
-    const { items, customer, paymentMethod, paymentDetails } = req.body || {};
+    const { items, customer, paymentMethod, paymentDetails, orderType, note } = req.body || {};
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'Items required' });
     }
@@ -141,6 +141,8 @@ app.post('/api/orders', (req, res) => {
       customer: customer || {},
       paymentMethod,
       paymentDetails: paymentDetails || {},
+      orderType: orderType || null,
+      note: note || "",
     };
 
     const orders = readOrders();

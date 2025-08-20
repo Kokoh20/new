@@ -1,13 +1,13 @@
 :root {
-  --bg: #100d0a;
-  --panel: #1a1511;
-  --card: #17120e;
-  --border: #2a221c;
-  --muted: #b8a8a0;
-  --text: #f3ebe7;
-  --brand: #c08457; /* cappuccino */
-  --accent: #f2d0a4; /* latte foam */
-  --danger: #ff7a7a;
+  --bg: #faf7f4;
+  --panel: #ffffff;
+  --card: #ffffff;
+  --border: #e7ded7;
+  --muted: #6d5e55;
+  --text: #2c241f;
+  --brand: #c08457;
+  --accent: #f2d0a4;
+  --danger: #c74242;
 }
 
 * { box-sizing: border-box; }
@@ -28,7 +28,7 @@ body {
 
 .app-header {
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+  background: var(--panel);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -40,6 +40,9 @@ body {
   justify-content: space-between;
   padding: 14px 0;
 }
+
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.cart-badge { background: var(--brand); color: #fff; padding: 2px 8px; border-radius: 999px; font-size: 12px; }
 
 .brand { display: flex; align-items: center; gap: 12px; }
 .brand-logo { font-size: 24px; }
@@ -124,10 +127,15 @@ select, input[type="text"], input[type="email"], input[type="tel"], input[type="
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 12px;
-  position: sticky; top: 80px;
+  position: fixed; right: 16px; top: 72px;
   max-height: calc(100vh - 120px);
   overflow: auto;
+  width: 320px;
+  transform: translateX(360px);
+  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
+.cart.open { transform: translateX(0); }
 .cart h3 { margin: 0 0 8px; }
 .cart-items { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
 .cart-item { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 8px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
@@ -184,10 +192,17 @@ legend { padding: 0 6px; color: var(--muted); }
 .product-card .thumb {
   width: 100%;
   aspect-ratio: 4/3;
-  background: #00000022;
+  background: #f6efe8;
   border-radius: 10px;
   border: 1px solid var(--border);
   background-size: cover;
   background-position: center;
+}
+
+.section-tools { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+input[type="search"] { min-width: 220px; }
+
+.backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.2);
 }
 

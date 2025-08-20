@@ -19,6 +19,12 @@
             <div class="brand-tagline">Coffee & Comfort</div>
           </div>
         </div>
+        <div class="header-actions">
+          <button id="openCartBtn" class="btn secondary" aria-label="Open cart">
+            Cart
+            <span class="cart-badge" id="cartCount">0</span>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -27,14 +33,18 @@
       <section id="step-products" class="step active">
         <div class="section-header">
           <h2>Menu</h2>
-          <div id="categoryTabs" class="tabs" aria-label="Categories"></div>
+          <div class="section-tools">
+            <input id="searchInput" type="search" placeholder="Search menu..." />
+            <div id="categoryTabs" class="tabs" aria-label="Categories"></div>
+          </div>
         </div>
 
         <div class="layout">
           <div class="products" id="productsGrid"></div>
 
-          <aside class="cart" id="cartPanel">
+          <aside class="cart" id="cartPanel" aria-label="Cart" aria-hidden="true">
             <h3>Cart</h3>
+            <button id="closeCartBtn" class="btn secondary" style="width:100%; margin-bottom:8px;">Close</button>
             <ul id="cartItems" class="cart-items"></ul>
             <div class="totals">
               <div class="row">
@@ -61,6 +71,27 @@
         </div>
 
         <form id="paymentForm" class="payment-form">
+          <fieldset>
+            <legend>Order details</legend>
+            <div class="field-row">
+              <div class="radio">
+                <input type="radio" name="orderType" value="Dine-in" id="ot-dine" />
+                <label for="ot-dine">Dine-in</label>
+              </div>
+              <div class="radio">
+                <input type="radio" name="orderType" value="Take-out" id="ot-take" />
+                <label for="ot-take">Take-out</label>
+              </div>
+              <div class="radio">
+                <input type="radio" name="orderType" value="Delivery" id="ot-deliv" />
+                <label for="ot-deliv">Delivery</label>
+              </div>
+            </div>
+            <div class="field-row">
+              <label for="orderNote">Order note (optional)</label>
+              <textarea id="orderNote" rows="2" placeholder="e.g., Less sugar, no ice"></textarea>
+            </div>
+          </fieldset>
           <fieldset>
             <legend>Customer details (optional)</legend>
             <div class="field-row">
@@ -117,6 +148,8 @@
         </div>
       </section>
     </main>
+
+    <div id="backdrop" class="backdrop" hidden></div>
 
     <footer class="app-footer">
       <div class="container">
