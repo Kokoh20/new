@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mauiz Cafe · Order</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="container header-inner">
+        <div class="brand">
+          <div class="brand-logo">☕️</div>
+          <div class="brand-text">
+            <div class="brand-name" id="businessName">Mauiz Cafe</div>
+            <div class="brand-tagline">Coffee & Comfort</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="openCartBtn" class="btn secondary" aria-label="Open cart">
+            Cart
+            <span class="cart-badge" id="cartCount">0</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Step 1: Product Selection -->
+      <section id="step-products" class="step active">
+        <div class="section-header">
+          <h2>Menu</h2>
+          <div class="section-tools">
+            <input id="searchInput" type="search" placeholder="Search menu..." />
+            <div id="categoryTabs" class="tabs" aria-label="Categories"></div>
+          </div>
+        </div>
+
+        <div class="layout">
+          <div class="products" id="productsGrid"></div>
+
+          <aside class="cart" id="cartPanel" aria-label="Cart" aria-hidden="true">
+            <h3>Cart</h3>
+            <button id="closeCartBtn" class="btn secondary" style="width:100%; margin-bottom:8px;">Close</button>
+            <ul id="cartItems" class="cart-items"></ul>
+            <div class="totals">
+              <div class="row">
+                <span>Subtotal</span>
+                <strong id="subtotalAmount">$0.00</strong>
+              </div>
+              <div class="row grand">
+                <span>Total</span>
+                <strong id="totalAmount">$0.00</strong>
+              </div>
+            </div>
+            <div class="cart-actions">
+              <button id="clearCartBtn" class="btn secondary">Clear</button>
+              <button id="toPaymentBtn" class="btn primary" disabled>Proceed to payment</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Step 2: Payment -->
+      <section id="step-payment" class="step">
+        <div class="section-header">
+          <h2>Payment</h2>
+        </div>
+
+        <form id="paymentForm" class="payment-form">
+          <fieldset>
+            <legend>Order details</legend>
+            <div class="field-row">
+              <div class="radio">
+                <input type="radio" name="orderType" value="Dine-in" id="ot-dine" />
+                <label for="ot-dine">Dine-in</label>
+              </div>
+              <div class="radio">
+                <input type="radio" name="orderType" value="Take-out" id="ot-take" />
+                <label for="ot-take">Take-out</label>
+              </div>
+              <div class="radio">
+                <input type="radio" name="orderType" value="Delivery" id="ot-deliv" />
+                <label for="ot-deliv">Delivery</label>
+              </div>
+            </div>
+            <div class="field-row">
+              <label for="orderNote">Order note (optional)</label>
+              <textarea id="orderNote" rows="2" placeholder="e.g., Less sugar, no ice"></textarea>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Customer details (optional)</legend>
+            <div class="field-row">
+              <label for="customerName">Name</label>
+              <input type="text" id="customerName" placeholder="Jane Doe" />
+            </div>
+            <div class="field-row two">
+              <div>
+                <label for="customerEmail">Email</label>
+                <input type="email" id="customerEmail" placeholder="jane@example.com" />
+              </div>
+              <div>
+                <label for="customerPhone">Phone</label>
+                <input type="tel" id="customerPhone" placeholder="+1 555-0100" />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Payment method</legend>
+            <div class="field-row">
+              <label class="radio">
+                <input type="radio" name="paymentMethod" value="cash" />
+                <span>Cash</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="paymentMethod" value="card" />
+                <span>Card</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="paymentMethod" value="wallet" />
+                <span>Mobile wallet</span>
+              </label>
+            </div>
+            <div id="paymentDetails" class="payment-details"></div>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="button" id="backToProductsBtn" class="btn secondary">Back</button>
+            <button type="submit" id="confirmPaymentBtn" class="btn primary" disabled>Confirm & Generate invoice</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Step 3: Invoice -->
+      <section id="step-invoice" class="step">
+        <div class="section-header">
+          <h2>Invoice</h2>
+        </div>
+        <div id="invoiceContainer" class="invoice"></div>
+        <div class="invoice-actions">
+          <button id="printInvoiceBtn" class="btn secondary">Print / Save as PDF</button>
+          <button id="newOrderBtn" class="btn primary">New order</button>
+        </div>
+      </section>
+    </main>
+
+    <div id="backdrop" class="backdrop" hidden></div>
+
+    <footer class="app-footer">
+      <div class="container">
+        <small>
+          <span id="businessFooterName">Mauiz Cafe</span> · <span id="businessFooterContact">hello@mauizcafe.example</span>
+        </small>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+  </html>
+
